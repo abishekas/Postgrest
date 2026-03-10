@@ -1,55 +1,164 @@
-# Infrastructure Take Home
+Infrastructure Take Home
 
 Treat this system as a production system.
 
-## Getting Started
+Getting Started
 
 Clone this repository locally.
-Create your own public git repository in github or somewhere we can access and push this code into it.
-Make changes to your repository.
-Getting things to work for you is part of the assessment.
 
-You will be assessed by someone cloning your repository when you're finished and running your instructions to recreate the expected solution.
-If we cannot run your repository instructions we cannot assess your work.
+Create your own public repository in GitHub (or any platform accessible to the reviewer) and push this code into it.
+Make changes to your repository as needed to complete the assignment.
 
-### Prerequsites
+The reviewer will clone your repository and run the instructions provided in this README to recreate the expected solution.
 
-You will need the following:
-* docker runtime and tools
-* k3d CLI
-* opentofu binary or terraform
-* kubectl binary
-* git
+If the instructions cannot be followed to reproduce the environment, the solution cannot be assessed.
 
-## Starting point
+Prerequisites
 
-Use terraform or opentofu to initialise a k3d cluster and postgres instance locally from the `tofu` directory.
-Install Argo CD into the k3d cluster by following the instructions in the `argocd` directory.
+The following tools must be installed:
 
-# Problem
+Docker runtime and Docker CLI
 
-Please add commits to your fork of the repo to answer this problem.
-Note: the use of the word `postgrest` is confusing, but correct - this is a project that we're going to deploy.
+k3d CLI
 
-## Add a user to the database
+Terraform or OpenTofu
 
-Please add a super user to the postgrest database.
+kubectl
 
-## Inject a secret for postgrest
+Git
 
-Creating a superuser account in this new database, inject the secrets into the k3d cluster into a namespace called postgrest.
-You must do this with terraform/opentofu.
+Deployment Instructions
+1. Provision Infrastructure
 
-## Install Postgrest into the k3d cluster
+Navigate to the tofu directory and run:
 
-https://docs.postgrest.org/en/v14/
+terraform apply
 
-The result should be an accessible endpoint that you can use in your browser.
+This Terraform configuration will perform the following actions:
 
-## Inject some data from the cluster using a `Job`
+Create a local Kubernetes cluster using k3d
 
-Use a kubernetes job to inject some data into the postgres database
+Provision a PostgreSQL 16 container
 
-## Provide an expected screenshot
+Create a PostgreSQL database named postgrest
 
-Update this file, README.md, with a screenshot of what we should see when we visit the URL after following your instructions - this should show us the data you have injected.
+Create a PostgreSQL superuser named:
+
+postgrest_user
+
+with password:
+
+postgrest_password
+
+Grant required privileges on:
+
+the public schema
+
+all tables within the schema
+
+Create a Kubernetes namespace named:
+
+postgrest
+
+Create a Kubernetes secret named:
+
+postgrest-db
+
+inside the postgrest namespace containing the database connection credentials used by the PostgREST application.
+
+Note:
+During the first run, terraform apply may fail while the Kubernetes cluster is still initializing.
+If this occurs, simply run the command again.
+
+2. Deploy the PostgREST Application
+
+Navigate to the Postgrest directory:
+
+cd Postgrest
+
+Run the deployment script:
+
+./postgrest.sh
+
+This script performs the following tasks:
+
+Creates a Kubernetes Job that inserts seed data into the PostgreSQL database
+
+Deploys the PostgREST application as a Kubernetes Deployment
+
+Creates a ClusterIP Service to expose the application inside the cluster
+
+Creates an Ingress resource to expose the PostgREST API externally
+
+3. Access the API
+
+Once the deployment is complete, the API can be accessed via the ingress endpoint.
+
+Example:
+
+http://<SERVER_IP>:8080/users
+
+Expected output:
+
+[
+  {
+    "id": 1,
+    "name": "Alice"
+  }
+]
+
+This output confirms that:
+
+The database user was created successfully
+
+The Kubernetes job inserted data into PostgreSQL
+
+PostgREST is correctly exposing the table as a REST API endpoint
+
+4. Project Components
+
+This solution includes the following components.
+
+Infrastructure (Terraform)
+
+k3d Kubernetes cluster provisioning
+
+PostgreSQL container deployment
+
+PostgreSQL database creation
+
+PostgreSQL role and privilege configuration
+
+Kubernetes namespace creation
+
+Kubernetes secret management
+
+Kubernetes Resources
+
+PostgREST Deployment
+
+PostgREST Service
+
+PostgREST Ingress
+
+Database seeding Job
+
+PostgREST
+
+The PostgREST service automatically exposes PostgreSQL tables as REST API endpoints.
+
+For example:
+
+/users
+
+maps directly to the users table in the PostgreSQL database.
+
+Expected Result
+
+After following the above steps, opening the API endpoint in a browser should display the seeded data from PostgreSQL.
+
+A screenshot of this response should be included below.
+
+Screenshot
+
+(Add the screenshot of the /users endpoint here as required by the assignment.)

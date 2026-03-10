@@ -1,0 +1,31 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: seed-data
+  namespace: postgrest
+spec:
+  template:
+    spec:
+      containers:
+        - name: seed
+          image: postgres:16
+          env:
+            - name: PGRST_DB_URI
+              valueFrom:
+                secretKeyRef:
+                  name: postgrest-db
+                  key: PGRST_DB_URI
+          command:
+            - sh
+            - -c
+            - |
+              psql $PGRST_DB_URI <<EOF
+              CREATE TABLE IF NOT EXISTS users (
+                id SERIAL PRIMARY KEY,
+                name TEXT
+              );
+
+              INSERT INTO users(name) VALUES ('Alice');
+              EOF
+      restartPolicy: Never
+  backoffLimit: 2
