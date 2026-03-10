@@ -31,11 +31,11 @@ Git
 **Deployment Instructions**
 **1. Provision Infrastructure**
 
-Navigate to the tofu directory and run:
+**Navigate to the tofu directory and run:**
 
 terraform apply
 
-This Terraform configuration will perform the following actions:
+**This Terraform configuration will perform the following actions:**
 
 Create a local Kubernetes cluster using k3d
 
@@ -43,7 +43,7 @@ Provision a PostgreSQL 16 container
 
 Create a PostgreSQL database named postgrest
 
-Create a PostgreSQL superuser named:
+**Create a PostgreSQL superuser named:**
 
 postgrest_user
 
@@ -51,7 +51,7 @@ with password:
 
 postgrest_password
 
-Grant required privileges on:
+**Grant required privileges on:**
 
 the public schema
 
@@ -77,11 +77,11 @@ Navigate to the Postgrest directory:
 
 cd Postgrest
 
-Run the deployment script:
+**Run the deployment script:**
 
 ./postgrest.sh
 
-This script performs the following tasks:
+**This script performs the following tasks:**
 
 Creates a Kubernetes Job that inserts seed data into the PostgreSQL database
 
@@ -95,11 +95,11 @@ Creates an Ingress resource to expose the PostgREST API externally
 
 Once the deployment is complete, the API can be accessed via the ingress endpoint.
 
-Example:
+**Example:**
 
 http://<SERVER_IP>:8080/users
 
-Expected output:
+**Expected output:**
 
 [
   {
@@ -120,7 +120,7 @@ PostgREST is correctly exposing the table as a REST API endpoint
 
 This solution includes the following components.
 
-Infrastructure (Terraform)
+**Infrastructure (Terraform)**
 
 k3d Kubernetes cluster provisioning
 
@@ -134,7 +134,7 @@ Kubernetes namespace creation
 
 Kubernetes secret management
 
-Kubernetes Resources
+**Kubernetes Resources**
 
 PostgREST Deployment
 
@@ -144,7 +144,7 @@ PostgREST Ingress
 
 Database seeding Job
 
-PostgREST
+**PostgREST**
 
 The PostgREST service automatically exposes PostgreSQL tables as REST API endpoints.
 
