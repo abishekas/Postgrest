@@ -1,4 +1,4 @@
-Infrastructure Take Home
+**Infrastructure Take Home:**
 
 Treat this system as a production system.
 
@@ -13,7 +13,8 @@ The reviewer will clone your repository and run the instructions provided in thi
 
 If the instructions cannot be followed to reproduce the environment, the solution cannot be assessed.
 
-Prerequisites
+
+**Prerequisites**
 
 The following tools must be installed:
 
@@ -27,8 +28,8 @@ kubectl
 
 Git
 
-Deployment Instructions
-1. Provision Infrastructure
+**Deployment Instructions**
+**1. Provision Infrastructure**
 
 Navigate to the tofu directory and run:
 
@@ -66,11 +67,11 @@ postgrest-db
 
 inside the postgrest namespace containing the database connection credentials used by the PostgREST application.
 
-Note:
+**Note:**
 During the first run, terraform apply may fail while the Kubernetes cluster is still initializing.
 If this occurs, simply run the command again.
 
-2. Deploy the PostgREST Application
+**2. Deploy the PostgREST Application**
 
 Navigate to the Postgrest directory:
 
@@ -90,7 +91,7 @@ Creates a ClusterIP Service to expose the application inside the cluster
 
 Creates an Ingress resource to expose the PostgREST API externally
 
-3. Access the API
+**3. Access the API**
 
 Once the deployment is complete, the API can be accessed via the ingress endpoint.
 
@@ -115,7 +116,7 @@ The Kubernetes job inserted data into PostgreSQL
 
 PostgREST is correctly exposing the table as a REST API endpoint
 
-4. Project Components
+**4. Project Components**
 
 This solution includes the following components.
 
@@ -147,18 +148,18 @@ PostgREST
 
 The PostgREST service automatically exposes PostgreSQL tables as REST API endpoints.
 
-For example:
+**For example:**
 
 /users
 
 maps directly to the users table in the PostgreSQL database.
 
-Expected Result
+**Expected Result**
 
 After following the above steps, opening the API endpoint in a browser should display the seeded data from PostgreSQL.
 
 A screenshot of this response should be included below.
 
-Screenshot
+**Screenshot**
 
 (Add the screenshot of the /users endpoint here as required by the assignment.)
