@@ -162,4 +162,5 @@ A screenshot of this response should be included below.
 
 **Screenshot**
 
-(Add the screenshot of the /users endpoint here as required by the assignment.)
+<img width="2940" height="544" alt="image" src="https://github.com/user-attachments/assets/836942d6-5fda-4602-9716-57b35ed3f624" />
+
