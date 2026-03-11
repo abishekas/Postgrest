@@ -142,7 +142,7 @@ This allows pods running inside the Kubernetes cluster to securely connect to Po
 
 After infrastructure provisioning, the script executes:
 
-`Postgrest/postgrest.sh
+`Postgrest/postgrest.sh`
 
 This deployment script performs the following actions.
 
