@@ -25,10 +25,11 @@ kubectl
 Git
 
 **Project Structure**
+
+```
 infra-takehome
 │
 ├── README.md
-│
 ├── argocd
 │   └── ArgoCD installation manifests
 │
@@ -39,7 +40,6 @@ infra-takehome
 │   └── job.yaml
 │
 └── tofu
-    │
     ├── terraform-apply.sh
     ├── terraform-destroy.sh
     │
@@ -53,6 +53,7 @@ infra-takehome
         ├── main.tf
         ├── variables.tf
         └── versions.tf
+```
 
         
 **Deployment Instructions**
