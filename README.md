@@ -16,151 +16,242 @@ If the instructions cannot be followed to reproduce the environment, the solutio
 
 **Prerequisites**
 
-The following tools must be installed:
+The following tools must be installed on the system.
 
 Docker runtime and Docker CLI
-
 k3d CLI
-
 Terraform or OpenTofu
-
 kubectl
-
 Git
 
+**Project Structure**
+infra-takehome
+│
+├── README.md
+│
+├── argocd
+│   └── ArgoCD installation manifests
+│
+├── postgrest
+│   ├── postgrest.sh
+│   ├── deployment.yaml
+│   ├── ingress.yaml
+│   └── job.yaml
+│
+└── tofu
+    │
+    ├── terraform-apply.sh
+    ├── terraform-destroy.sh
+    │
+    ├── cluster
+    │   ├── main.tf
+    │   ├── variables.tf
+    │   ├── versions.tf
+    │   └── outputs.tf
+    │
+    └── k8s-secret
+        ├── main.tf
+        ├── variables.tf
+        └── versions.tf
+
+        
 **Deployment Instructions**
 **1. Provision Infrastructure**
 
-**Navigate to the tofu directory and run:**
+Run the infrastructure provisioning script:
 
-terraform apply
+`./terraform-apply.sh`
 
-**This Terraform configuration will perform the following actions:**
+**This script performs the following actions:**
 
-Create a local Kubernetes cluster using k3d
+1. Executes Terraform inside the cluster directory to create the infrastructure.
+2. Waits until the Kubernetes cluster becomes available.
+3. Executes Terraform inside the k8s-secret directory to configure Kubernetes resources.
+4. Runs the PostgREST deployment script.
 
-Provision a PostgreSQL 16 container
+**Infrastructure Provisioning (cluster/main.tf)**
 
-Create a PostgreSQL database named postgrest
+The **cluster/main.tf** Terraform configuration is responsible for provisioning the base infrastructure.
 
-**Create a PostgreSQL superuser named:**
+This includes:
 
-postgrest_user
+Kubernetes Cluster
 
-with password:
+A Kubernetes cluster is created locally using k3d, which runs a lightweight k3s cluster inside Docker.
 
-postgrest_password
+The cluster exposes the ingress load balancer on:
 
-**Grant required privileges on:**
+`http://<SERVER_IP>:8080
 
-the public schema
+**PostgreSQL Deployment**
 
-all tables within the schema
+A PostgreSQL 16 container is created using Docker with:
 
-Create a Kubernetes namespace named:
+1. persistent Docker volume storage
+2. port exposure on 5432
+3. default database initialization
 
-postgrest
+**Database Initialization**
 
-Create a Kubernetes secret named:
+Terraform connects to PostgreSQL and automatically creates:
 
-postgrest-db
+**Database**
 
-inside the postgrest namespace containing the database connection credentials used by the PostgREST application.
+`postgrest`
 
-**Note:**
-During the first run, terraform apply may fail while the Kubernetes cluster is still initializing.
-If this occurs, simply run the command again.
+**Superuser**
 
-**2. Deploy the PostgREST Application**
+`postgrest_user`
 
-Navigate to the Postgrest directory:
+**Password**
 
-cd Postgrest
+`postgrest_password`
 
-**Run the deployment script:**
 
-./postgrest.sh
+**Privilege Configuration**
 
-**This script performs the following tasks:**
+The following permissions are granted:
 
-Creates a Kubernetes Job that inserts seed data into the PostgreSQL database
+1. USAGE permission on the public schema
+2. SELECT permission on all tables
 
-Deploys the PostgREST application as a Kubernetes Deployment
+This allows the PostgREST API to read data from PostgreSQL.
 
-Creates a ClusterIP Service to expose the application inside the cluster
+**Kubernetes Configuration (k8s-secret/main.tf)**
 
-Creates an Ingress resource to expose the PostgREST API externally
+The Terraform configuration inside the k8s-secret directory creates Kubernetes resources required for the application.
 
-**3. Access the API**
+**Namespace Creation**
 
-Once the deployment is complete, the API can be accessed via the ingress endpoint.
+A Kubernetes namespace named:
 
-**Example:**
+`postgrest
 
-http://<SERVER_IP>:8080/users
+is created to isolate application resources.
 
-**Expected output:**
+**Kubernetes Secret**
+
+A secret named:
+
+`postgrest-db
+
+is created inside the postgrest namespace.
+
+This secret contains the database connection string used by PostgREST.
+
+Example connection string stored in the secret:
+
+`postgres://postgrest_user:postgrest_password@host.k3d.internal:5432/postgrest
+
+This allows pods running inside the Kubernetes cluster to securely connect to PostgreSQL.
+
+**Deploying the PostgREST Application**
+
+After infrastructure provisioning, the script executes:
+
+`Postgrest/postgrest.sh
+
+This deployment script performs the following actions.
+
+**Database Seed Job**
+
+A Kubernetes Job runs a PostgreSQL container that inserts sample data into the database.
+
+Example table created:
+
+`users`
+
+Example seeded data:
+
+`Postgrest`
+
+**PostgREST Deployment**
+
+The script deploys the PostgREST container which automatically converts PostgreSQL tables into REST APIs.
+
+**Service Creation**
+
+A ClusterIP service is created so the application is accessible within the cluster.
+
+**Ingress Configuration**
+
+An Ingress resource is created so that Traefik can expose the API externally.
+
+**External access endpoint:**
+
+`http://<SERVER_IP>:8080/users`
+
+**Accessing the API**
+
+Once the deployment is complete, open the following URL in a browser.
+
+`http://<SERVER_IP>:8080/users`
+
+**Expected response:**
 
 [
   {
     "id": 1,
-    "name": "Alice"
+    "name": "Postgrest"
   }
 ]
 
-This output confirms that:
+This confirms that:
 
-The database user was created successfully
+1. PostgreSQL is running
+2. Database user and privileges were configured
+3, The Kubernetes job inserted data
+4. PostgREST successfully exposed the database table as an API endpoint
 
-The Kubernetes job inserted data into PostgreSQL
+**Destroying the Infrastructure**
 
-PostgREST is correctly exposing the table as a REST API endpoint
+To remove all resources, run:
 
-**4. Project Components**
+`./terraform-destroy.sh`
 
-This solution includes the following components.
+This script performs the cleanup in reverse order:
 
-**Infrastructure (Terraform)**
+1. Destroys Kubernetes resources created in k8s-secret
+2. Destroys infrastructure created in cluster
+3. Deletes the k3d Kubernetes cluster
+4. Removes the PostgreSQL container and related resources
 
-k3d Kubernetes cluster provisioning
+**Components Used**
+**Infrastructure**
 
-PostgreSQL container deployment
-
-PostgreSQL database creation
-
-PostgreSQL role and privilege configuration
-
-Kubernetes namespace creation
-
-Kubernetes secret management
+1. Terraform
+2. k3d (Kubernetes cluster)
+3. Docker
+4. PostgreSQL 16
 
 **Kubernetes Resources**
 
-PostgREST Deployment
+1. Namespace
+2. Secret
+3. Deployment
+4. Service
+5. Ingress
+6. Database seed Job
 
-PostgREST Service
-
-PostgREST Ingress
-
-Database seeding Job
+**Application Layer**
 
 **PostgREST**
 
-The PostgREST service automatically exposes PostgreSQL tables as REST API endpoints.
+PostgREST automatically maps database tables to REST endpoints.
 
-**For example:**
+Example:
 
-/users
+`/users`
 
-maps directly to the users table in the PostgreSQL database.
+maps directly to the PostgreSQL table:
+
+`users`
 
 **Expected Result**
 
-After following the above steps, opening the API endpoint in a browser should display the seeded data from PostgreSQL.
-
-A screenshot of this response should be included below.
+After running the deployment script, accessing the API endpoint should return the seeded database records.
 
 **Screenshot**
 
-<img width="2940" height="544" alt="image" src="https://github.com/user-attachments/assets/836942d6-5fda-4602-9716-57b35ed3f624" />
+<img width="1348" height="202" alt="Screenshot 2026-03-11 at 10 22 05 PM" src="https://github.com/user-attachments/assets/a0a5c51e-943e-4ece-bb9f-1e718833ecfe" />
 
