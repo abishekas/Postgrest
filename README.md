@@ -74,7 +74,7 @@ A Kubernetes cluster is created locally using k3d, which runs a lightweight k3s 
 
 The cluster exposes the ingress load balancer on:
 
-`http://<SERVER_IP>:8080
+`http://<SERVER_IP>:8080`
 
 **PostgreSQL Deployment**
 
@@ -118,7 +118,7 @@ The Terraform configuration inside the k8s-secret directory creates Kubernetes r
 
 A Kubernetes namespace named:
 
-`postgrest
+`postgrest`
 
 is created to isolate application resources.
 
@@ -126,7 +126,7 @@ is created to isolate application resources.
 
 A secret named:
 
-`postgrest-db
+`postgrest-db`
 
 is created inside the postgrest namespace.
 
@@ -134,7 +134,7 @@ This secret contains the database connection string used by PostgREST.
 
 Example connection string stored in the secret:
 
-`postgres://postgrest_user:postgrest_password@host.k3d.internal:5432/postgrest
+`postgres://postgrest_user:postgrest_password@host.k3d.internal:5432/postgrest`
 
 This allows pods running inside the Kubernetes cluster to securely connect to PostgreSQL.
 
