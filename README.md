@@ -19,7 +19,7 @@ Git
 **Project Structure**
 
 ```
-infra-takehome
+Postgrest
 │
 ├── README.md
 ├── argocd
