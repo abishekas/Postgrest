@@ -4,3 +4,13 @@ tofu/.terraform.lock.hcl
 tofu/terraform.tfstate
 tofu/terraform.tfstate.backup
 tofu/*.tf~
+tofu/cluster/.terraform/
+tofu/cluster/.terraform.lock.hcl
+tofu/cluster/terraform.tfstate
+tofu/cluster/terraform.tfstate.backup
+tofu/cluster/*.tf~
+tofu/k8s-secret/.terraform/
+tofu/k8s-secret/.terraform.lock.hcl
+tofu/k8s-secret/terraform.tfstate
+tofu/k8s-secret/terraform.tfstate.backup
+tofu/k8s-secret/*.tf~
