@@ -6,14 +6,6 @@ Getting Started
 
 Clone this repository locally.
 
-Create your own public repository in GitHub (or any platform accessible to the reviewer) and push this code into it.
-Make changes to your repository as needed to complete the assignment.
-
-The reviewer will clone your repository and run the instructions provided in this README to recreate the expected solution.
-
-If the instructions cannot be followed to reproduce the environment, the solution cannot be assessed.
-
-
 **Prerequisites**
 
 The following tools must be installed on the system.
@@ -254,5 +246,5 @@ After running the deployment script, accessing the API endpoint should return th
 
 **Screenshot**
 
-<img width="1348" height="202" alt="Screenshot 2026-03-11 at 10 22 05 PM" src="https://github.com/user-attachments/assets/a0a5c51e-943e-4ece-bb9f-1e718833ecfe" />
+<img width="1470" height="212" alt="Screenshot 2026-03-11 at 10 25 58 PM" src="https://github.com/user-attachments/assets/8ab46efa-9252-4e69-9254-0cdda467f2cd" />
 
