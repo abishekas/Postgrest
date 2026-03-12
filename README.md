@@ -1,20 +1,50 @@
-**Infrastructure Take Home:**
+## Pipekit Infrastructure Assignment
 
-Treat this system as a production system.
+This repository contains the implementation of the **Infrastructure Take-Home Assignment provided by Pipekit**.
+The objective of this assignment is to design and deploy a **production-like infrastructure setup** that provisions a Kubernetes environment, configures PostgreSQL, and deploys a PostgREST application exposing database tables as REST APIs.
 
-Getting Started
+The solution demonstrates infrastructure provisioning, Kubernetes resource management, and automated deployment using modern DevOps tools.
 
-Clone this repository locally.
+### Technologies Used
+
+* Terraform / OpenTofu
+* Docker
+* k3d (Lightweight Kubernetes)
+* Kubernetes
+* PostgreSQL 16
+* PostgREST
+* ArgoCD (for GitOps manifests)
+* kubectl
+* Git
+
+---
+
+## Getting Started
+
+Clone this repository locally to begin the setup and deployment process.
+
+```bash
+git clone <repository-url>
+cd Postgrest
+```
+
+Follow the deployment instructions below to provision the infrastructure and deploy the application.
+
 
 **Prerequisites**
 
 The following tools must be installed on the system.
 
+```
 Docker runtime and Docker CLI
 k3d CLI
 Terraform or OpenTofu
 kubectl
 Git
+
+```
+
+---
 
 **Project Structure**
 
@@ -47,11 +77,14 @@ Postgrest
         └── versions.tf
 ```
 
-        
+---
+
 **Deployment Instructions**
 **1. Provision Infrastructure**
 
 Run the infrastructure provisioning script:
+
+` cd tofu `
 
 `./terraform-apply.sh`
 
@@ -174,6 +207,8 @@ An Ingress resource is created so that Traefik can expose the API externally.
 
 `http://<SERVER_IP>:8080/users`
 
+---
+
 **Accessing the API**
 
 Once the deployment is complete, open the following URL in a browser.
@@ -196,9 +231,13 @@ This confirms that:
 3, The Kubernetes job inserted data
 4. PostgREST successfully exposed the database table as an API endpoint
 
+---
+
 **Destroying the Infrastructure**
 
 To remove all resources, run:
+
+` cd tofu `
 
 `./terraform-destroy.sh`
 
@@ -208,6 +247,8 @@ This script performs the cleanup in reverse order:
 2. Destroys infrastructure created in cluster
 3. Deletes the k3d Kubernetes cluster
 4. Removes the PostgreSQL container and related resources
+
+---
 
 **Components Used**
 **Infrastructure**
@@ -240,6 +281,8 @@ maps directly to the PostgreSQL table:
 
 `users`
 
+---
+
 **Expected Result**
 
 After running the deployment script, accessing the API endpoint should return the seeded database records.
@@ -247,4 +290,3 @@ After running the deployment script, accessing the API endpoint should return th
 **Screenshot**
 
 <img width="1470" height="212" alt="Screenshot 2026-03-11 at 10 25 58 PM" src="https://github.com/user-attachments/assets/8ab46efa-9252-4e69-9254-0cdda467f2cd" />
-
